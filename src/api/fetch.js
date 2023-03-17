@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8000/'
+  baseURL: 'http://localhost:9101/'
 })
 
 instance.interceptors.request.use(function (config) {
@@ -10,4 +10,4 @@ instance.interceptors.request.use(function (config) {
   return config
 })
 
-return instance
+export default instance

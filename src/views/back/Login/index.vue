@@ -13,12 +13,14 @@
       </el-select>
     </el-form-item>
     <el-form-item>
-      <el-button>登录</el-button>
+      <el-button @click="handleClickLogin">登录</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import { backLogin } from '@/api/back/login'
+
 export default {
   name: 'backLogin',
   data () {
@@ -28,6 +30,17 @@ export default {
         username: '',
         roleType: ''
       }
+    }
+  },
+  methods: {
+    handleClickLogin () {
+      backLogin({
+        username: this.ruleForm.username,
+        password: this.ruleForm.password
+      }).then(({ data }) => {
+        let token = data.token
+        localStorage.setItem('token', token)
+      })
     }
   }
 }

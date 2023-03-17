@@ -3,10 +3,16 @@
     <div class="search">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="用户名">
-          <el-input v-model="formInline.username" placeholder="请输入用户名"></el-input>
+          <el-input
+            v-model="formInline.username"
+            placeholder="请输入用户名"
+          ></el-input>
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input v-model="formInline.phonenumber" placeholder="请输入手机号"></el-input>
+          <el-input
+            v-model="formInline.phonenumber"
+            placeholder="请输入手机号"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary">查询</el-button>
@@ -34,27 +40,36 @@
       <form-panel ref="formPanel" :form-list="addList"></form-panel>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import formPanel from '@/components/formPanel/index.vue'
+import formPanel from "@/components/formPanel/index.vue";
+
+import { getUserList, addUser, updateUser } from "@/api/back/user";
 
 export default {
   name: "userManage",
   components: {
-    formPanel
+    formPanel,
+  },
+  created() {
+    getUserList().then((res) => {
+      console.log(res, '2222222222222');
+    });
   },
   data() {
     return {
-      dialogVisible: true,
+      dialogVisible: false,
       userData: [],
       formInline: {
-        username: '',
-        phonenumber: ''
+        username: "",
+        phonenumber: "",
       },
       addList: [
         {
