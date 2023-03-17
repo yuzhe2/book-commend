@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <nav-bar></nav-bar>
-    <cut-part></cut-part>
+    <div v-if="isShow">
+      <nav-bar></nav-bar>
+      <cut-part></cut-part>
+    </div>
     <router-view/>
   </div>
 </template>
@@ -15,6 +17,15 @@ export default {
   components: {
     navBar,
     cutPart
+  },
+  created () {
+    console.log(this.$route)
+  },
+  computed: {
+    isShow() {
+      let path = this.$route.path
+      return !path.includes('manage')
+    }
   }
 }
 </script>
