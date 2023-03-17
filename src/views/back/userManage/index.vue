@@ -1,21 +1,34 @@
 <template>
   <div>
     <div class="search">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="用户名">
-          <el-input
-            v-model="formInline.username"
-            placeholder="请输入用户名"
-          ></el-input>
+      <el-form :inline="true" :model="formInline" class="form">
+        <el-form-item label="用户名" class="item">
+          <el-input v-model="formInline.name" placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item label="手机号">
-          <el-input
-            v-model="formInline.phonenumber"
-            placeholder="请输入手机号"
-          ></el-input>
+        <el-form-item label="用户状态" class="item">
+          <el-select v-model="formInline.status" >
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="停用" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="性别" class="item">
+          <el-select v-model="formInline.sex" >
+            <el-option label="男" value="0"></el-option>
+            <el-option label="女" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="用户类型" class="item">
+          <el-select v-model="formInline.type" >
+            <el-option label="普通用户" value="0"></el-option>
+            <el-option label="教授" value="1"></el-option>
+            <el-option label="管理员" value="2"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <div class="control-btn">
+            <el-button type="primary" @click="handleSearch">查询</el-button>
+            <el-button type="primary" @click="openDialog">添加</el-button>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -27,23 +40,36 @@
           :prop="item.fieldName"
           :label="item.label"
         >
+          <template v-if="item.fieldName === 'sex'" slot-scope="scope">
+            {{ scope.row.sex === '0' ? '男' : '女' }}
+          </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="small">删除</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button type="text" size="small" @click="handleDeleteUser">删除</el-button>
+            <el-button type="text" size="small" @click="handleEditUser(scope.row)">编辑</el-button>
+            <el-button type="text" size="small" @click="handleChangeStatus(scope.row)">
+              {{ scope.row.status == '0' ? '停用' : '启用' }}
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="30%">
-      <form-panel ref="formPanel" :form-list="addList"></form-panel>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
-      </span>
+    <el-pagination
+      class="table-page"
+      layout="prev, pager, next"
+      :total="total"
+      :currentPage.sync="currentPage"
+      @current-change="handleChangePage"
+    >
+    </el-pagination>
+    <el-dialog :title=" type === 'add' ? '添加用户' : '修改用户'" :visible.sync="dialogVisible" width="30%">
+      <form-panel
+        v-if="dialogVisible"
+        :form-list="addList"
+        @cancel="closeDialog"
+        @confirm="handleAddUser"
+      ></form-panel>
     </el-dialog>
   </div>
 </template>
@@ -51,41 +77,63 @@
 <script>
 import formPanel from "@/components/formPanel/index.vue";
 
-import { getUserList, addUser, updateUser } from "@/api/back/user";
+import { getUserList, addUser, updateUser, deleteUser } from "@/api/back/user";
+
+const pageSize = 10
 
 export default {
   name: "userManage",
   components: {
     formPanel,
   },
-  created() {
-    getUserList().then((res) => {
-      console.log(res, '2222222222222');
-    });
-  },
   data() {
     return {
-      dialogVisible: false,
-      userData: [],
+      dialogVisible: false, // 添加弹窗显示
+      total: 10, // 数据总数
+      currentPage: 1, // 当前页数
+      userData: [], // 用户数据
+      nowParams: {}, // 当前查询的参数
+      userId: '', // 记录当前要修改的用户id
+      type: 'add', // 用于记录对用户的何种操作 add --- 添加, edit --- 编辑
       formInline: {
-        username: "",
-        phonenumber: "",
+        name: "",
+        status: '',
+        sex: '',
+        type: ''
       },
       addList: [
         {
+          type: 'INPUT',
           label: "用户名",
+          initValue: '',
           fieldName: "username",
         },
         {
-          label: "性别",
-          fieldName: "sex",
+          type: 'INPUT',
+          label: "密码",
+          initValue: '',
+          fieldName: "password",
         },
         {
+          type: 'SELECT',
+          label: "性别",
+          fieldName: "sex",
+          initValue: '',
+          itemList: [
+            { value: '0', text: '男' },
+            { value: '1', text: '女' }
+          ]
+        },
+        {
+          type: 'INPUT',
           label: "邮箱",
+          initValue: '',
           fieldName: "email",
         },
         {
+          type: 'INPUT',
           label: "电话号码",
+          initValue: '',
           fieldName: "phonenumber",
         },
       ],
@@ -108,10 +156,147 @@ export default {
         },
         {
           label: "创建时间",
-          fieldName: "create_time",
+          fieldName: "createTime",
         },
       ],
     };
   },
+  methods: {
+    // 更改用户状态 --- 停用或启用
+    handleChangeStatus (row) {
+      
+    },
+    // 删除用户
+    handleDeleteUser (row) {
+      deleteUser(row.id).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+      })
+    },
+    // 编辑用户
+    handleEditUser (row) {
+      this.userId = row.id
+      this.type = 'edit'
+      this.addList = this.addList.map(val => {
+        val.initValue = row[val.fieldName]
+        return val
+      })
+    },
+    // 根据参数查询用户
+    handleSearch () {
+      let params = this.formInline
+      this.nowParams = params // 记录当前的参数, 用于翻页时
+      let pageReq = {
+        pageNum: 1,
+        pageSize
+      }
+      getUserList({
+        pageReq,
+        ...this.nowParams
+      }).then(({ data }) => {
+        this.total = data.total
+        this.userData = data.rows
+        this.$message({
+          type: 'success',
+          message: '查询成功'
+        })
+      })
+    },
+    // 关闭弹窗
+    closeDialog () {
+      this.dialogVisible = false
+    },
+    // 当前页改变时
+    handleChangePage () {
+      let pageReq = {
+        pageNum: this.currentPage,
+        pageSize
+      }
+      getUserList({
+        pageReq,
+        ...this.nowParams
+      }).then(({ data }) => {
+        this.userData = data.rows
+      })
+    },
+    // 打开添加用户弹窗
+    openDialog () {
+      this.dialogVisible = true
+      this.type = 'add'
+      this.addList = this.addList.map(val => {
+        val.initValue = ''
+        return val
+      })
+    },
+    // 根据当前请求参数和页数重新请求数据
+    resetData () {
+      let pageReq = {
+        pageNum: this.currentPage,
+        pageSize
+      }
+      getUserList({
+        pageReq,
+        ...this.nowParams
+      }).then(({ data }) => {
+        this.total = data.total
+        this.userData = data.rows
+      })
+    },
+    // 添加或修改用户
+    handleAddUser (userInfo) {
+      this.closeDialog()
+      if (this.type === 'add') {
+        addUser(userInfo).then(res => {
+          this.resetData()
+          this.$message({
+            type: 'success',
+            message: '添加用户成功'
+          })
+        })
+      } else if (this.type === 'edit') {
+        updateUser({
+          id: this.userId,
+          ...userInfo
+        }).then(res => {
+          this.resetData()
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          })
+        })
+      }
+    }
+  },
+  created () {
+    // 拿到初始的数据
+    let pageReq = {
+      pageNum: this.currentPage,
+      pageSize
+    }
+    getUserList({
+      pageReq
+    }).then(({ data }) => {
+      this.total = data.total
+      this.userData = data.rows
+    })
+  }
 };
 </script>
+
+<style scoped lang="scss">
+.table-page {
+  text-align: right;
+}
+.form {
+  display: flex;
+  align-items: center;
+}
+.item {
+  width: 20%;
+}
+.control-btn {
+  transform: translateY(18px);
+}
+</style>

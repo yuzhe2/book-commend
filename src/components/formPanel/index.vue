@@ -8,9 +8,25 @@
         :label="item.label"
         class="form-item"
       >
-        <el-input v-model="formData[item.fieldName]"></el-input>
+        <template v-if="item.type === 'INPUT'">
+          <el-input v-model="formData[item.fieldName]"></el-input>
+        </template>
+        <template v-else-if="item.type === 'SELECT'">
+          <el-select v-model="formData[item.fieldName]">
+            <el-option
+              v-for="(item, index) in item.itemList"
+              :key="index"
+              :label="item.text"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </template>
       </el-form-item>
     </el-form>
+    <div class="footer">
+      <el-button @click="handleClickCancel">取 消</el-button>
+      <el-button type="primary" @click="handleClickConfirm">确 定</el-button>
+    </div>
   </div>
 </template>
 
@@ -29,15 +45,20 @@ export default {
       formType: []
     }
   },
-  // 获取全部数据
-  getAllDate () {
-    return this.formData
-  },
+  methods: {
+    handleClickCancel () {
+      this.$emit('cancel')
+    },
+    handleClickConfirm () {
+      this.$emit('confirm', this.formData)
+    }
+  },  
   created () {
     this.formType = this.formList
     let formData = {}
-    for (let key in this.formType) {
-      formData[key] = ''
+    for (let i = 0; i < this.formType.length; i++) {
+      let field = this.formType[i]['fieldName']
+      formData[field] = this.formType[i]['initValue'] || ''
     }
     this.formData = formData
   }
@@ -45,12 +66,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// .form {
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: space-between;
-//   .form-item {
-//     width: 40%;
-//   }
-// }
+.footer {
+  text-align: right;
+}
 </style>
