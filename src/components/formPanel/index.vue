@@ -55,10 +55,11 @@ export default {
   },  
   created () {
     this.formType = this.formList
+    console.log(this.formList)
     let formData = {}
     for (let i = 0; i < this.formType.length; i++) {
       let field = this.formType[i]['fieldName']
-      formData[field] = this.formType[i]['initValue'] || ''
+      formData[field] = this.formType[i]['initValue'] + ''
     }
     this.formData = formData
   }

@@ -6,11 +6,13 @@ import BookDetail from '@/views/Detail/index.vue'
 import LoginPage from '@/views/login/index.vue'
 import RegisterPage from '@/views/register/index.vue'
 
+import manageWrap from '@/components/manageWrap/index.vue'
 import BackLogin from '@/views/back/Login/index.vue'
+
 import userManage from '@/views/back/userManage/index.vue'
 import bookManage from '@/views/back/bookManage/index.vue'
 import sortManage from '@/views/back/sortManage/index.vue'
-import manageWrap from '@/components/manageWrap/index.vue'
+import borrowManage from '@/views/back/borrowManage/index.vue'
 
 Vue.use(VueRouter)
 
@@ -56,6 +58,10 @@ const routes = [
         path: '/manage/book',
         component: bookManage
       },
+      {
+        path: '/manage/borrow',
+        component: borrowManage
+      }
     ]
   }
 ]

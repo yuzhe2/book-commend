@@ -34,19 +34,21 @@
     </div>
     <div class="table">
       <el-table :data="userData">
-        <el-table-column
-          v-for="(item, index) in userList"
-          :key="index"
-          :prop="item.fieldName"
-          :label="item.label"
-        >
-          <template v-if="item.fieldName === 'sex'" slot-scope="scope">
-            {{ scope.row.sex === '0' ? '男' : '女' }}
-          </template>
-        </el-table-column>
+        <template v-for="(item, index) in userList">
+          <el-table-column
+            :prop="item.fieldName"
+            :label="item.label"
+            v-if="item.fieldName === 'sex'"
+          >
+            <template slot-scope="scope">
+              {{ scope.row.sex == '0' ? '男' : '女' }}
+            </template>
+          </el-table-column>
+          <el-table-column v-else :prop="item.fieldName" :label="item.label"></el-table-column>
+        </template>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="handleDeleteUser">删除</el-button>
+            <el-button type="text" size="small" @click="handleDeleteUser(scope.row)">删除</el-button>
             <el-button type="text" size="small" @click="handleEditUser(scope.row)">编辑</el-button>
             <el-button type="text" size="small" @click="handleChangeStatus(scope.row)">
               {{ scope.row.status == '0' ? '停用' : '启用' }}
@@ -169,6 +171,7 @@ export default {
     // 删除用户
     handleDeleteUser (row) {
       deleteUser(row.id).then(() => {
+        this.resetData()
         this.$message({
           type: 'success',
           message: '删除成功'
@@ -179,6 +182,7 @@ export default {
     handleEditUser (row) {
       this.userId = row.id
       this.type = 'edit'
+      this.dialogVisible = true
       this.addList = this.addList.map(val => {
         val.initValue = row[val.fieldName]
         return val
@@ -196,8 +200,8 @@ export default {
         pageReq,
         ...this.nowParams
       }).then(({ data }) => {
-        this.total = data.total
-        this.userData = data.rows
+        this.total = parseInt(data.data.total)
+        this.userData = data.data.rows
         this.$message({
           type: 'success',
           message: '查询成功'
@@ -218,7 +222,7 @@ export default {
         pageReq,
         ...this.nowParams
       }).then(({ data }) => {
-        this.userData = data.rows
+        this.userData = data.data.rows
       })
     },
     // 打开添加用户弹窗
@@ -240,8 +244,8 @@ export default {
         pageReq,
         ...this.nowParams
       }).then(({ data }) => {
-        this.total = data.total
-        this.userData = data.rows
+        this.total = parseInt(data.data.total)
+        this.userData = data.data.rows
       })
     },
     // 添加或修改用户
@@ -252,7 +256,7 @@ export default {
           this.resetData()
           this.$message({
             type: 'success',
-            message: '添加用户成功'
+            message: '添加图书成功'
           })
         })
       } else if (this.type === 'edit') {
@@ -278,8 +282,8 @@ export default {
     getUserList({
       pageReq
     }).then(({ data }) => {
-      this.total = data.total
-      this.userData = data.rows
+      this.total = parseInt(data.data.total)
+      this.userData = data.data.rows
     })
   }
 };

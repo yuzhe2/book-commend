@@ -1,4 +1,3 @@
-import axios from "axios";
 import instance from "../fetch";
 
 // 获取用户列表
@@ -8,23 +7,15 @@ export const getUserList = function (params) {
 
 // 添加用户
 export const addUser = function (user) {
-  return instance.post({
-    url: "/admin/user/add",
-    data: user,
-  });
+  return instance.post("/admin/user/add", user);
 };
 
 // 修改用户
 export const updateUser = function (user) {
-  return instance.put({
-    url: "/admin/user/update",
-    data: user,
-  });
+  return instance.put("/admin/user/update", user);
 };
 
 // 删除用户
 export const deleteUser = function (id) {
-  return instance.delete({
-    url: `/admin/user/delete/${id}`
-  })
+  return instance.delete(`/admin/user/delete/${id}`)
 }

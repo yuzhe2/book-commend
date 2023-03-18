@@ -36,6 +36,10 @@ export default {
           path: '/manage/sort',
           title: '分类管理'
         },
+        {
+          path: '/manage/borrow',
+          title: '借阅管理'
+        }
       ]
     }
   }
