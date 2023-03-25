@@ -15,10 +15,18 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="分类">
-          <el-input
+          <el-select
             v-model="formInline.typeId"
             placeholder="请输入分类"
-          ></el-input>
+            clearable
+          >
+            <el-option
+              v-for="item in sortOps"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item>
           <div class="control-btn">
@@ -30,17 +38,27 @@
     </div>
     <div class="table">
       <el-table :data="bookData">
-        <el-table-column
-          v-for="(item, index) in bookList"
-          :key="index"
-          :prop="item.fieldName"
-          :label="item.label"
-        >
-        </el-table-column>
+        <template v-for="(item, index) in bookList">
+          <el-table-column
+            v-if="item.fieldName === 'typeid'"
+            :prop="item.fieldName"
+            :label="item.label"
+          >
+            <template slot-scope="scope">
+              <el-tag type="success">{{ getSort(scope.row.typeid) }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-else
+            :prop="item.fieldName"
+            :label="item.label"
+          >
+          </el-table-column>
+        </template>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="small">删除</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button type="text" size="small" @click="handleDeleteUser(scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click="handleEditUser(scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,6 +89,8 @@
 <script>
 import formPanel from "@/components/formPanel/index.vue";
 import { getBookList, addBook, updateBook, deleteBook } from "@/api/back/book";
+import { getSortList } from "@/api/back/sort";
+
 const pageSize = 10;
 
 export default {
@@ -86,6 +106,7 @@ export default {
       currentPage: 1, // 当前页数
       type: 'add', // 用于记录对图书的何种操作 add --- 添加, edit --- 编辑
       bookId: '', // 记录当前要修改的图书id
+      sortOps: [], // 分类的字典数据
       formInline: {
         bookName: "",
         typeId: "",
@@ -94,7 +115,7 @@ export default {
       bookList: [
         {
           label: "名称",
-          fieldName: "book_name",
+          fieldName: "bookName",
         },
         {
           label: "评分",
@@ -110,7 +131,11 @@ export default {
         },
         {
           label: "创建时间",
-          fieldName: "create_time",
+          fieldName: "createTime",
+        },
+        {
+          label: '分类',
+          fieldName: 'typeid'
         },
       ],
       addList: [
@@ -122,9 +147,22 @@ export default {
         },
         {
           type: "INPUT",
+          label: "库存",
+          initValue: "",
+          fieldName: "inventory",
+        },
+        {
+          type: "INPUT",
+          label: "出版社",
+          initValue: "",
+          fieldName: "publish",
+        },
+        {
+          type: "SELECT",
           label: "分类",
           initValue: "",
-          fieldName: "typeId",
+          fieldName: "typeid",
+          itemList: []
         },
         {
           type: "INPUT",
@@ -148,6 +186,10 @@ export default {
     };
   },
   methods: {
+    // 根据id获取分类名称
+    getSort (id) {
+      return this.sortOps.find(val => val.value === id).label
+    },
     // 删除图书
     handleDeleteUser(row) {
       deleteBook(row.id).then(() => {
@@ -167,6 +209,7 @@ export default {
         val.initValue = row[val.fieldName];
         return val;
       });
+      console.log(this.addList)
     },
     // 根据参数查询图书
     handleSearch() {
@@ -265,6 +308,24 @@ export default {
       this.total = parseInt(data.data.total);
       this.bookData = data.data.rows;
     });
+    getSortList({ typeName: '' }).then(({data}) => {
+      let sortOps = []
+      for (let i = 0; i < data.data.length; i++) {
+        let obj = {}
+        obj.label = data.data[i].name
+        obj.value = data.data[i].id
+        sortOps.push(obj)
+      }
+      let itemList = []
+      for (let i = 0; i < data.data.length; i++) {
+        let obj = {}
+        obj.text = data.data[i].name
+        obj.value = data.data[i].id
+        itemList.push(obj)
+      }
+      this.addList[3].itemList = itemList
+      this.sortOps = sortOps
+    })
   },
 };
 </script>

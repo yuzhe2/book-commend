@@ -12,7 +12,7 @@
           <el-input v-model="formInline.bookName" placeholder="请输入图书名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -27,7 +27,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="handleReturnBook(scope.rows)">归还</el-button>
+            <el-button type="text" size="small" @click="handleReturnBook(scope.row)">归还</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,10 +66,6 @@ export default {
           fieldName: "userName",
         },
         {
-          label: "分类",
-          fieldName: "typeName",
-        },
-        {
           label: "图书名",
           fieldName: "bookName",
         },
@@ -83,14 +79,16 @@ export default {
   methods: {
     // 归还图书
     handleReturnBook (row) {
+      console.log(row)
       returnBook({
-        bookId: row.bookId,
-        userId: row.userId
+        bookId: row.bookid,
+        userId: row.userid
       }).then(() => {
         this.$message({
           type: 'success',
           message: '归还成功'
         })
+        this.resetData()
       })
     },
     // 根据参数查询借阅记录

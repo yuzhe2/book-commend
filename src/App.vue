@@ -18,9 +18,6 @@ export default {
     navBar,
     cutPart
   },
-  created () {
-    console.log(this.$route)
-  },
   computed: {
     isShow() {
       let path = this.$route.path

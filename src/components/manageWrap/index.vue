@@ -3,7 +3,7 @@
     <el-aside class="aside">
       <el-menu router :default-active="currentName">
         <el-menu-item
-          v-for="(item, index) in pageRoute"
+          v-for="(item, index) in getCurPage()"
           :key="index"
           :index="item.path"
         >
@@ -41,6 +41,15 @@ export default {
           title: '借阅管理'
         }
       ]
+    }
+  },
+  methods: {
+    getCurPage () {
+      const type = localStorage.getItem('backType')
+      if (type === '1') {
+        return this.pageRoute.slice(1)
+      }
+      return this.pageRoute
     }
   }
 }

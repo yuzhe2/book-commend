@@ -17,5 +17,5 @@ export const updateBook = function (Book) {
 
 // 删除图书
 export const deleteBook = function (id) {
-  return instance.delete(`/admin/book/delete/${id}`)
+  return instance.delete(`/admin/book/${id}`)
 }

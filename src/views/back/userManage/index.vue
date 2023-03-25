@@ -6,21 +6,21 @@
           <el-input v-model="formInline.name" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item label="用户状态" class="item">
-          <el-select v-model="formInline.status" >
+          <el-select v-model="formInline.status" clearable>
             <el-option label="正常" value="0"></el-option>
             <el-option label="停用" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="性别" class="item">
-          <el-select v-model="formInline.sex" >
+          <el-select v-model="formInline.sex" clearable>
             <el-option label="男" value="0"></el-option>
             <el-option label="女" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户类型" class="item">
-          <el-select v-model="formInline.type" >
+          <el-select v-model="formInline.type" clearable>
             <el-option label="普通用户" value="0"></el-option>
-            <el-option label="教授" value="1"></el-option>
+            <el-option label="教师" value="1"></el-option>
             <el-option label="管理员" value="2"></el-option>
           </el-select>
         </el-form-item>
@@ -44,6 +44,24 @@
               {{ scope.row.sex == '0' ? '男' : '女' }}
             </template>
           </el-table-column>
+          <el-table-column
+            :prop="item.fieldName"
+            :label="item.label"
+            v-else-if="item.fieldName === 'type'"
+          >
+            <template slot-scope="scope">
+              <el-tag type="success">{{ userTypeList[scope.row.type] }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :prop="item.fieldName"
+            :label="item.label"
+            v-else-if="item.fieldName === 'status'"
+          >
+            <template slot-scope="scope">
+              <el-tag type="success">{{ scope.row.status === 0 ? '启用' : '停用' }}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column v-else :prop="item.fieldName" :label="item.label"></el-table-column>
         </template>
         <el-table-column label="操作">
@@ -61,6 +79,7 @@
       class="table-page"
       layout="prev, pager, next"
       :total="total"
+      :page-size="5"
       :currentPage.sync="currentPage"
       @current-change="handleChangePage"
     >
@@ -79,9 +98,9 @@
 <script>
 import formPanel from "@/components/formPanel/index.vue";
 
-import { getUserList, addUser, updateUser, deleteUser } from "@/api/back/user";
+import { getUserList, addUser, updateUser, deleteUser, changeStatus } from "@/api/back/user";
 
-const pageSize = 10
+const pageSize = 5
 
 export default {
   name: "userManage",
@@ -93,6 +112,7 @@ export default {
       dialogVisible: false, // 添加弹窗显示
       total: 10, // 数据总数
       currentPage: 1, // 当前页数
+      userTypeList: ['普通用户', '教授', '管理员'],
       userData: [], // 用户数据
       nowParams: {}, // 当前查询的参数
       userId: '', // 记录当前要修改的用户id
@@ -138,6 +158,17 @@ export default {
           initValue: '',
           fieldName: "phonenumber",
         },
+        {
+          type: 'SELECT',
+          label: "用户类型",
+          fieldName: "type",
+          initValue: '',
+          itemList: [
+            { value: '0', text: '普通用户' },
+            { value: '1', text: '教授' },
+            { value: '2', text: '管理员' }
+          ]
+        }
       ],
       userList: [
         {
@@ -160,13 +191,28 @@ export default {
           label: "创建时间",
           fieldName: "createTime",
         },
+        {
+          label: '用户类型',
+          fieldName: 'type'
+        },
+        {
+          label: '用户状态',
+          fieldName: 'status'
+        }
       ],
     };
   },
   methods: {
     // 更改用户状态 --- 停用或启用
     handleChangeStatus (row) {
-      
+      let status = row.status === 0 ? 1 : 0
+      changeStatus({
+        id: row.id,
+        status: status
+      }).then(res => {
+        this.$message.success('更改用户状态成功')
+        this.resetData()
+      })
     },
     // 删除用户
     handleDeleteUser (row) {
@@ -256,7 +302,7 @@ export default {
           this.resetData()
           this.$message({
             type: 'success',
-            message: '添加图书成功'
+            message: '添加用户成功'
           })
         })
       } else if (this.type === 'edit') {

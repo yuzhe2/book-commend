@@ -19,3 +19,8 @@ export const updateUser = function (user) {
 export const deleteUser = function (id) {
   return instance.delete(`/admin/user/delete/${id}`)
 }
+
+// 更改用户状态
+export const changeStatus = function (params) {
+  return instance.post("/admin/user/changeStatus", params);
+}

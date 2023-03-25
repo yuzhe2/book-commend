@@ -4,7 +4,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="名称">
           <el-input
-            v-model="formInline.sortName"
+            v-model="formInline.typeName"
             placeholder="请输入名称"
           ></el-input>
         </el-form-item>
@@ -27,20 +27,12 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="small">删除</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button type="text" size="small" @click="handleDeleteUser(scope.row)">删除</el-button>
+            <el-button type="text" size="small" @click="handleEditUser(scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <el-pagination
-      class="table-page"
-      layout="prev, pager, next"
-      :total="total"
-      :currentPage.sync="currentPage"
-      @current-change="handleChangePage"
-    >
-    </el-pagination>
     <el-dialog
       :title="type === 'add' ? '添加图书' : '修改图书'"
       :visible.sync="dialogVisible"
@@ -59,7 +51,6 @@
 <script>
 import formPanel from "@/components/formPanel/index.vue";
 import { getSortList, addSort, updateSort, deleteSort } from "@/api/back/sort";
-const pageSize = 10;
 
 export default {
   name: "sortManage",
@@ -70,12 +61,10 @@ export default {
     return {
       sortData: [],
       dialogVisible: false, // 添加弹窗显示
-      total: 10, // 数据总数
-      currentPage: 1, // 当前页数
       type: "add", // 用于记录对分类的何种操作 add --- 添加, edit --- 编辑
       sortId: "", // 记录当前要修改的分类id
       formInline: {
-        sortName: "",
+        typeName: "",
       },
       sortList: [
         {
@@ -83,12 +72,8 @@ export default {
           fieldName: "name",
         },
         {
-          label: "创建人",
-          fieldName: "createBy",
-        },
-        {
           label: "创建时间",
-          fieldName: "create_time",
+          fieldName: "createTime",
         },
       ],
       addList: [
@@ -96,7 +81,7 @@ export default {
           type: "INPUT",
           label: "分类名称",
           initValue: "",
-          fieldName: "bookName",
+          fieldName: "name",
         },
       ],
     };
@@ -126,16 +111,11 @@ export default {
     handleSearch() {
       let params = this.formInline;
       this.nowParams = params; // 记录当前的参数, 用于翻页时
-      let pageReq = {
-        pageNum: 1,
-        pageSize,
-      };
       getSortList({
-        pageReq,
         ...this.nowParams,
       }).then(({ data }) => {
         this.total = parseInt(data.data.total);
-        this.sortData = data.data.rows;
+        this.sortData = data.data;
         this.$message({
           type: "success",
           message: "查询成功",
@@ -145,19 +125,6 @@ export default {
     // 关闭弹窗
     closeDialog() {
       this.dialogVisible = false;
-    },
-    // 当前页改变时
-    handleChangePage() {
-      let pageReq = {
-        pageNum: this.currentPage,
-        pageSize,
-      };
-      getSortList({
-        pageReq,
-        ...this.nowParams,
-      }).then(({ data }) => {
-        this.sortData = data.data.rows;
-      });
     },
     // 打开添加分类弹窗
     openDialog() {
@@ -170,16 +137,11 @@ export default {
     },
     // 根据当前请求参数和页数重新请求数据
     resetData() {
-      let pageReq = {
-        pageNum: this.currentPage,
-        pageSize,
-      };
       getSortList({
-        pageReq,
         ...this.nowParams,
       }).then(({ data }) => {
         this.total = parseInt(data.data.total);
-        this.sortData = data.data.rows;
+        this.sortData = data.data;
       });
     },
     // 添加或修改分类
@@ -209,15 +171,9 @@ export default {
   },
   created() {
     // 拿到初始的数据
-    let pageReq = {
-      pageNum: this.currentPage,
-      pageSize,
-    };
-    getSortList({
-      pageReq,
-    }).then(({ data }) => {
+    getSortList(this.formInline).then(({ data }) => {
       this.total = parseInt(data.data.total);
-      this.sortData = data.data.rows;
+      this.sortData = data.data;
     });
   },
 };

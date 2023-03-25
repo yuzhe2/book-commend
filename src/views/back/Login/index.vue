@@ -6,12 +6,6 @@
     <el-form-item label="密码">
       <el-input v-model="ruleForm.password"></el-input>
     </el-form-item>
-    <el-form-item label="选择角色">
-      <el-select v-model="ruleForm.roleType" placeholder="请选择角色">
-        <el-option label="老师" value="1"></el-option>
-        <el-option label="管理员" value="2"></el-option>
-      </el-select>
-    </el-form-item>
     <el-form-item>
       <el-button @click="handleClickLogin">登录</el-button>
     </el-form-item>
@@ -27,19 +21,24 @@ export default {
     return {
       ruleForm: {
         password: '',
-        username: '',
-        roleType: ''
+        username: ''
       }
     }
   },
   methods: {
     handleClickLogin () {
       backLogin({
-        username: this.ruleForm.username,
+        userName: this.ruleForm.username,
         password: this.ruleForm.password
       }).then(({ data }) => {
-        let token = data.token
-        localStorage.setItem('token', token)
+        let token = data.data.token
+        localStorage.setItem('backToken', token)
+        localStorage.setItem('backType', data.data.type)
+        if (data.data.type === '1') {
+          this.$router.push('/manage/book')
+        } else if (data.data.type === '2') {
+          this.$router.push('/manage/user')
+        }
       })
     }
   }
