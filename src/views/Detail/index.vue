@@ -4,7 +4,7 @@
       <img :src="image" class="img">
     </div>
     <div class="right">
-      <div class="title">[{{ type }}]{{book_name}}</div>
+      <div class="title">[{{ type }}]{{bookName}}</div>
       <div class="author">
         <span class="prefix">作者: </span>
         {{ author }}
@@ -13,23 +13,43 @@
         <span class="prefix">出版社: </span>
         {{ publish }}
       </div>
-      <el-button>借阅图书</el-button>
+      <el-button @click="borrowBook">借阅图书</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import { getBookById, borrowBook } from '@/api/top/book'
+
 export default {
   name: 'bookDetail',
   data () {
     return {
-      bookId: '11111',
-      image: 'https://www.xyyuedu.com/uploads/140811/156-140Q1213105202.jpg',
-      'book_name': '月海电台',
-      author: '夏桑',
-      publish: '重庆出版集团',
+      bookId: '',
+      image: '',
+      bookName: '',
+      author: '',
+      publish: '',
       type: '科幻'
     }
+  },
+  methods: {
+    borrowBook () {
+      borrowBook(this.bookId).then(() => {
+        this.$message.success('借阅成功')
+      })
+    }
+  },
+  created () {
+    let id = this.$route.params.id
+    getBookById(id).then(({ data }) => {
+      let book = data.data
+      this.bookId = book.id
+      this.author = book.author
+      this.image = book.image
+      this.publish = book.publish
+      this.bookName = book.bookName
+    })
   }
 }
 </script>
@@ -48,6 +68,7 @@ export default {
   }
 
   .right {
+    margin-left: 20px;
     .title {
       color: #22126e;
       font-weight: bold;

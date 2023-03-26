@@ -1,10 +1,10 @@
 <template>
-  <div class="book-item">
+  <div class="book-item" @click="goBookDetail">
     <div class="left">
       <img :src="image" class="img">
     </div>
     <div class="right">
-      <div class="title">[{{ type }}]{{book_name}}</div>
+      <div class="title">[{{ type }}]{{bookName}}</div>
       <div class="author">
         <span class="prefix">作者: </span>
         {{ author }}
@@ -20,14 +20,21 @@
 <script>
 export default {
   name: 'bookItem',
+  props: {
+    image: String,
+    bookName: String,
+    id: String,
+    author: String,
+    publish: String
+  },
   data () {
     return {
-      bookId: '11111',
-      image: 'https://www.xyyuedu.com/uploads/140811/156-140Q1213105202.jpg',
-      'book_name': '月海电台',
-      author: '夏桑',
-      publish: '重庆出版集团',
       type: '科幻'
+    }
+  },
+  methods: {
+    goBookDetail () {
+      this.$router.push(`/detail/${this.id}`)
     }
   }
 }
@@ -42,6 +49,7 @@ export default {
   margin-top: 20px;
   border-radius: 4px;
   cursor: pointer;
+  user-select: none;
 
   .left {
     font-size: 0px;
@@ -51,6 +59,7 @@ export default {
   }
 
   .right {
+    margin-left: 20px;
     .title {
       color: #D24c3e;
       font-weight: bold;

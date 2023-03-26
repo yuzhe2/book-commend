@@ -2,13 +2,13 @@
   <div class="person-recommend">
     <div class="title">
       <span class="nonius"></span>
-      <span>个性化推荐</span>
+      <span>新书上架推荐</span>
     </div>
     <div class="book-list">
       <book-item
         v-for="(item, index) in bookList"
-        v-bind="item"
         :key="index"
+        v-bind="item"
         class="item"
       ></book-item>
     </div>
@@ -26,12 +26,12 @@
 
 <script>
 import bookItem from '@/components/book/index.vue'
-import { getPersonalBookList } from '@/api/top/book'
+import { getNewBookList } from '@/api/top/book'
 
 const pageSize = 12
 
 export default {
-  name: 'perCom',
+  name: 'newCom',
   components: {
     bookItem
   },
@@ -52,7 +52,7 @@ export default {
         pageNum: this.curPage,
         pageSize
       }
-      getPersonalBookList(params).then(({ data }) => {
+      getNewBookList(params).then(({ data }) => {
         this.bookList = data.data.rows
         this.bookTotal = parseInt(data.data.total)
       })

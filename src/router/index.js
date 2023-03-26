@@ -3,12 +3,14 @@ import VueRouter from 'vue-router'
 
 import HomePage from '@/views/Home/index.vue'
 import BookDetail from '@/views/Detail/index.vue'
+import BookSort from '@/views/bookSort/index.vue'
+
 import LoginPage from '@/views/login/index.vue'
 import RegisterPage from '@/views/register/index.vue'
 
-import manageWrap from '@/components/manageWrap/index.vue'
 import BackLogin from '@/views/back/Login/index.vue'
 
+import manageWrap from '@/components/manageWrap/index.vue'
 import userManage from '@/views/back/userManage/index.vue'
 import bookManage from '@/views/back/bookManage/index.vue'
 import sortManage from '@/views/back/sortManage/index.vue'
@@ -34,8 +36,12 @@ const routes = [
     component: HomePage
   },
   {
-    path: '/detail',
+    path: '/detail/:id',
     component: BookDetail
+  },
+  {
+    path: '/sort',
+    component: BookSort
   },
 
   {

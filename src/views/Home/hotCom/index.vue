@@ -2,7 +2,7 @@
   <div class="person-recommend">
     <div class="title">
       <span class="nonius"></span>
-      <span>个性化推荐</span>
+      <span>热门图书推荐</span>
     </div>
     <div class="book-list">
       <book-item
@@ -26,12 +26,12 @@
 
 <script>
 import bookItem from '@/components/book/index.vue'
-import { getPersonalBookList } from '@/api/top/book'
+import { getHotBookList } from '@/api/top/book'
 
 const pageSize = 12
 
 export default {
-  name: 'perCom',
+  name: 'hotCom',
   components: {
     bookItem
   },
@@ -52,7 +52,7 @@ export default {
         pageNum: this.curPage,
         pageSize
       }
-      getPersonalBookList(params).then(({ data }) => {
+      getHotBookList(params).then(({ data }) => {
         this.bookList = data.data.rows
         this.bookTotal = parseInt(data.data.total)
       })
