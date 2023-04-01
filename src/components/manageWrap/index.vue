@@ -62,6 +62,7 @@ export default {
     border-right: solid 1px #e6e6e6;
   }
   .main {
+    background-color: #f1f1f1;
     // border: 1px;
   }
 }

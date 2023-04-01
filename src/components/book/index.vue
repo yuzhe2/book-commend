@@ -4,7 +4,7 @@
       <img :src="image" class="img">
     </div>
     <div class="right">
-      <div class="title">[{{ type }}]{{bookName}}</div>
+      <div class="title">{{bookName}}</div>
       <div class="author">
         <span class="prefix">作者: </span>
         {{ author }}
@@ -12,6 +12,10 @@
       <div class="publish">
         <span class="prefix">出版社: </span>
         {{ publish }}
+      </div>
+      <div class="sort">
+        <span class="prefix">分类: </span>
+        {{ typeName }}
       </div>
     </div>
   </div>
@@ -25,12 +29,8 @@ export default {
     bookName: String,
     id: String,
     author: String,
-    publish: String
-  },
-  data () {
-    return {
-      type: '科幻'
-    }
+    publish: String,
+    typeName: String
   },
   methods: {
     goBookDetail () {
@@ -72,7 +72,8 @@ export default {
     }
 
     .author,
-    .publish {
+    .publish,
+    .sort {
       color: #393392;
       font-size: 12px;
 
@@ -81,6 +82,10 @@ export default {
         font-size: 13px;
         font-weight: bold;
       }
+    }
+
+    .sort {
+      margin-top: 10px;
     }
   }
 }

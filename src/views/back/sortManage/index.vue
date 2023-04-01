@@ -10,8 +10,10 @@
         </el-form-item>
         <el-form-item>
           <div class="control-btn">
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-            <el-button type="primary" @click="openDialog">添加</el-button>
+            <el-select v-model="manType" @change="handleManChange">
+              <el-option value="1" label="查询"></el-option>
+              <el-option value="2" label="添加"></el-option>
+            </el-select>
           </div>
         </el-form-item>
       </el-form>
@@ -27,8 +29,18 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="handleDeleteUser(scope.row)">删除</el-button>
-            <el-button type="text" size="small" @click="handleEditUser(scope.row)">编辑</el-button>
+            <el-button
+              type="text"
+              size="small"
+              @click="handleDeleteUser(scope.row)"
+              >删除</el-button
+            >
+            <el-button
+              type="text"
+              size="small"
+              @click="handleEditUser(scope.row)"
+              >编辑</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -59,6 +71,7 @@ export default {
   },
   data() {
     return {
+      manType: "1",
       sortData: [],
       dialogVisible: false, // 添加弹窗显示
       type: "add", // 用于记录对分类的何种操作 add --- 添加, edit --- 编辑
@@ -87,6 +100,14 @@ export default {
     };
   },
   methods: {
+    // 根据用户的操作执行不同的方法
+    handleManChange(value) {
+      if (value === "1") {
+        this.handleSearch();
+      } else if (value === "2") {
+        this.openDialog();
+      }
+    },
     // 删除分类
     handleDeleteUser(row) {
       deleteSort(row.id).then(() => {

@@ -15,4 +15,6 @@ export const getHotBookList = (params) => instance.get(`/book/getHotBookList`, {
 // 借阅图书
 export const borrowBook = (params) => instance.post("/user/borrow", params);
 
+// 根据图书名查询数据
+export const getBookListByName = (params) => instance.post("/book/getBookListByName", params);
 

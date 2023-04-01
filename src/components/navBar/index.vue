@@ -6,15 +6,20 @@
       v-model="searchName"
       class="input-with-select"
     >
-      <el-button slot="append">搜索</el-button>
+      <el-button slot="append" @click="handleSearchName">搜索</el-button>
     </el-input>
-    <el-button>图书分类</el-button>
+    <el-button @click="handleJumpSort">图书分类</el-button>
+    <el-button @click="handleJumpEnd">后台登录</el-button>
     <div class="is-login">
-      <template v-if="isLogin"></template>
-      <template>
+      <template v-if="isLogin">
+        <span>
+          <el-button @click="outerLogin">退出登录</el-button>
+        </span>
+      </template>
+      <template v-else>
         <span>
           欢迎, 请先
-          <a href="javascript:;" class="login">登录</a>
+          <el-button class="login" @click="jumpLoginPage">登录</el-button>
         </span>
       </template>
     </div>
@@ -35,6 +40,31 @@ export default {
     ...mapState({
       isLogin: state => state.isLogin
     })
+  },
+  methods: {
+    handleSearchName () {
+      this.$router.push(`/search?name=${this.searchName}`)
+    },
+    handleJumpSort () {
+      this.$router.push('/sort')
+    },
+    // 后台登录
+    handleJumpEnd () {
+      this.$router.push(`/manage/login`)
+    },
+    jumpLoginPage () {
+      this.$router.push(`/login`)
+    },
+    outerLogin () {
+      this.$store.commit('changeLoginStatus', false)
+      localStorage.removeItem('frontToken')
+      this.$message.success('退出登录成功')
+    }
+  },
+  created () {
+    if (localStorage.getItem('frontToken')) {
+      this.$store.commit('changeLoginStatus', true)
+    }
   }
 }
 </script>

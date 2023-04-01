@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import HomePage from '@/views/Home/index.vue'
 import BookDetail from '@/views/Detail/index.vue'
 import BookSort from '@/views/bookSort/index.vue'
+import BookSearch from '@/views/bookSearch/index.vue'
 
 import LoginPage from '@/views/login/index.vue'
 import RegisterPage from '@/views/register/index.vue'
@@ -43,6 +44,11 @@ const routes = [
     path: '/sort',
     component: BookSort
   },
+  {
+    path: '/search',
+    component: BookSearch
+  },
+
 
   {
     path: '/manage/login',

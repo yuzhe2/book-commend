@@ -35,7 +35,11 @@ export default {
   },
   methods: {
     borrowBook () {
-      borrowBook(this.bookId).then(() => {
+      let userId = localStorage.getItem('userId')
+      borrowBook({
+        userId,
+        bookId: this.bookId
+      }).then(() => {
         this.$message.success('借阅成功')
       })
     }

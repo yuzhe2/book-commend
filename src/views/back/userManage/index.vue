@@ -19,15 +19,17 @@
         </el-form-item>
         <el-form-item label="用户类型" class="item">
           <el-select v-model="formInline.type" clearable>
-            <el-option label="普通用户" value="0"></el-option>
+            <el-option label="学生" value="0"></el-option>
             <el-option label="教师" value="1"></el-option>
             <el-option label="管理员" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <div class="control-btn">
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-            <el-button type="primary" @click="openDialog">添加</el-button>
+            <el-select v-model="manType" @change="handleManChange">
+              <el-option value="1" label="查询"></el-option>
+              <el-option value="2" label="添加"></el-option>
+            </el-select>
           </div>
         </el-form-item>
       </el-form>
@@ -110,6 +112,7 @@ export default {
   data() {
     return {
       dialogVisible: false, // 添加弹窗显示
+      manType: '1', // 操作类型
       total: 10, // 数据总数
       currentPage: 1, // 当前页数
       userTypeList: ['普通用户', '教授', '管理员'],
@@ -203,6 +206,14 @@ export default {
     };
   },
   methods: {
+    // 根据用户的操作执行不同的方法
+    handleManChange (value) {
+      if (value === '1') {
+        this.handleSearch()
+      } else if (value === '2') {
+        this.openDialog()
+      }
+    },
     // 更改用户状态 --- 停用或启用
     handleChangeStatus (row) {
       let status = row.status === 0 ? 1 : 0

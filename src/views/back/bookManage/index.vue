@@ -30,8 +30,10 @@
         </el-form-item>
         <el-form-item>
           <div class="control-btn">
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-            <el-button type="primary" @click="openDialog">添加</el-button>
+            <el-select v-model="manType" @change="handleManChange">
+              <el-option value="1" label="查询"></el-option>
+              <el-option value="2" label="添加"></el-option>
+            </el-select>
           </div>
         </el-form-item>
       </el-form>
@@ -102,6 +104,7 @@ export default {
     return {
       dialogVisible: false, // 添加弹窗显示
       bookData: [],
+      manType: '1',
       total: 10, // 数据总数
       currentPage: 1, // 当前页数
       type: 'add', // 用于记录对图书的何种操作 add --- 添加, edit --- 编辑
@@ -186,6 +189,13 @@ export default {
     };
   },
   methods: {
+    handleManChange (value) {
+      if (value === '1') {
+        this.handleSearch()
+      } else if (value === '2') {
+        this.openDialog()
+      }
+    },
     // 根据id获取分类名称
     getSort (id) {
       return this.sortOps.find(val => val.value === id).label

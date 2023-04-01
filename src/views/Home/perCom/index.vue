@@ -66,7 +66,6 @@ export default {
 
 <style scoped lang="scss">
 .person-recommend {
-  margin-top: 20px;
   .book-page {
     text-align: center;
     margin-top: 10px;
