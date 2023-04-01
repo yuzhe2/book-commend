@@ -5,6 +5,7 @@ import HomePage from '@/views/Home/index.vue'
 import BookDetail from '@/views/Detail/index.vue'
 import BookSort from '@/views/bookSort/index.vue'
 import BookSearch from '@/views/bookSearch/index.vue'
+import PersonCenter from '@/views/personCenter/index.vue'
 
 import LoginPage from '@/views/login/index.vue'
 import RegisterPage from '@/views/register/index.vue'
@@ -47,6 +48,10 @@ const routes = [
   {
     path: '/search',
     component: BookSearch
+  },
+  {
+    path: '/me',
+    component: PersonCenter
   },
 
 

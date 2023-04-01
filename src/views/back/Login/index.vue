@@ -37,12 +37,16 @@ export default {
         password: this.ruleForm.password,
       }).then(({ data }) => {
         let token = data.data.token;
-        localStorage.setItem("backToken", token);
-        localStorage.setItem("backType", data.data.type);
         if (data.data.type === "1") {
           this.$router.push("/manage/book");
+          localStorage.setItem("backToken", token);
+          localStorage.setItem("backType", data.data.type);
         } else if (data.data.type === "2") {
           this.$router.push("/manage/user");
+          localStorage.setItem("backToken", token);
+          localStorage.setItem("backType", data.data.type);
+        } else if (data.data.type === '0') {
+          this.$message.warning('普通用户不能登录')
         }
       });
     },

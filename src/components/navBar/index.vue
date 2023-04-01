@@ -13,6 +13,7 @@
     <div class="is-login">
       <template v-if="isLogin">
         <span>
+          <el-button @click="jumpPerson">个人中心</el-button>
           <el-button @click="outerLogin">退出登录</el-button>
         </span>
       </template>
@@ -42,6 +43,9 @@ export default {
     })
   },
   methods: {
+    jumpPerson () {
+      this.$router.push('/me')
+    },
     handleSearchName () {
       this.$router.push(`/search?name=${this.searchName}`)
     },
@@ -58,6 +62,7 @@ export default {
     outerLogin () {
       this.$store.commit('changeLoginStatus', false)
       localStorage.removeItem('frontToken')
+      localStorage.removeItem('userId')
       this.$message.success('退出登录成功')
     }
   },

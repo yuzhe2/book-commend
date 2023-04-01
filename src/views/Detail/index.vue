@@ -36,6 +36,7 @@ export default {
   methods: {
     borrowBook () {
       let userId = localStorage.getItem('userId')
+      if (!userId) return this.$message.warning('用户未登录不能借阅图书')
       borrowBook({
         userId,
         bookId: this.bookId
