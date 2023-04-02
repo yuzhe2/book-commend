@@ -42,12 +42,16 @@ export default {
         ...this.form,
         type: this.type
       }).then(({ data }) => {
-        let userInfo = data.data
-        localStorage.setItem('frontToken', userInfo.token)
-        localStorage.setItem('userId', userInfo.user.id)
-        this.$store.commit('changeLoginStatus', true)
-        this.$router.push('/home')
-        this.$message.success('登录成功')
+        if (data.code == 200) {
+          let userInfo = data.data
+          localStorage.setItem('frontToken', userInfo.token)
+          localStorage.setItem('userId', userInfo.user.id)
+          this.$store.commit('changeLoginStatus', true)
+          this.$router.push('/home')
+          this.$message.success('登录成功')
+        } else {
+          this.$message.error(data.msg)
+        }
       })
     }
   }
