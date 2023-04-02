@@ -97,9 +97,12 @@ export default {
     flex-wrap: wrap;
     justify-content: space-between;
     background-color: #fff;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
+    padding-left: 18px;    
+
     .book-item {
-      width: 30%;      
+      width: 30%;
+      margin-right: 32px;
     }
   }
 

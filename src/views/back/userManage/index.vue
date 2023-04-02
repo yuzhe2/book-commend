@@ -102,7 +102,7 @@ import formPanel from "@/components/formPanel/index.vue";
 
 import { getUserList, addUser, updateUser, deleteUser, changeStatus } from "@/api/back/user";
 
-const pageSize = 5
+const pageSize = 8
 
 export default {
   name: "userManage",

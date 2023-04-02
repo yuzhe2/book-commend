@@ -8,10 +8,10 @@
             placeholder="请输入书名"
           ></el-input>
         </el-form-item>
-        <el-form-item label="年份">
+        <el-form-item label="作者">
           <el-input
-            v-model="formInline.year"
-            placeholder="请输入年份"
+            v-model="formInline.author"
+            placeholder="请输入作者 "
           ></el-input>
         </el-form-item>
         <el-form-item label="分类">
@@ -51,12 +51,16 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-else-if="item.fieldName === 'image'"
+            v-else-if="item.fieldName === 'bookName'"
             :prop="item.fieldName"
             :label="item.label"
+            width="200px"
           >
             <template slot-scope="scope">
-              <img :src="scope.row.image" style="width: 100px;" />
+              <div class="book">
+                <img :src="scope.row.image" style="width: 50px; margin-right: 8px;" />
+                <span span>{{ scope.row.bookName }}</span>
+              </div>
             </template>
           </el-table-column>
           <el-table-column
@@ -132,7 +136,7 @@ export default {
       formInline: {
         bookName: "",
         typeId: "",
-        year: "",
+        author: "",
       },
       bookList: [
         {
@@ -158,10 +162,6 @@ export default {
         {
           label: '分类',
           fieldName: 'typeid'
-        },
-        {
-          label: '封面',
-          fieldName: 'image'
         }
       ],
       addList: [
@@ -366,5 +366,15 @@ export default {
 <style scoped lang="scss">
 .table-page {
   text-align: right;
+}
+.book {
+  display: flex;
+  align-items: center;
+}
+.table {
+  ::v-deep .el-table {
+    box-sizing: unset !important;
+    padding-left: 10px;
+  }
 }
 </style>

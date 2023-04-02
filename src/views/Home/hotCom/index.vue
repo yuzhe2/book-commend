@@ -88,11 +88,12 @@ export default {
   .book-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     background-color: #fff;
     padding-bottom: 10px;
+    padding-left: 18px; 
     .item {
-      width: 30%;      
+      width: 30%;
+      margin-right: 32px;   
     }
   }
 }

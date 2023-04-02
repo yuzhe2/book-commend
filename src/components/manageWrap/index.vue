@@ -72,13 +72,15 @@ export default {
 <style scoped lang="scss">
 .header {
   height: 44px;
-  background-color: #00ffff;
+  background-color: #fff;
   padding: 8px 10px 8px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
   .title {
     display: inline-block;
     height: 100%;
+    font-size: 22px;
+    font-weight: bold;
     line-height: 44px;
-    color: #fff;
   }
   .btn {
     float: right;
