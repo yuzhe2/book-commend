@@ -62,6 +62,9 @@ export default {
       }
       return this.pageRoute
     }
+  },
+  created () {
+    this.currentName = this.$route.path
   }
 }
 </script>

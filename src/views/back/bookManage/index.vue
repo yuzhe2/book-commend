@@ -51,6 +51,25 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-else-if="item.fieldName === 'image'"
+            :prop="item.fieldName"
+            :label="item.label"
+          >
+            <template slot-scope="scope">
+              <img :src="scope.row.image" style="width: 100px;" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-else-if="item.fieldName === 'createTime'"
+            :prop="item.fieldName"
+            :label="item.label"
+            width="160px"
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.createTime }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             v-else
             :prop="item.fieldName"
             :label="item.label"
@@ -140,6 +159,10 @@ export default {
           label: '分类',
           fieldName: 'typeid'
         },
+        {
+          label: '封面',
+          fieldName: 'image'
+        }
       ],
       addList: [
         {

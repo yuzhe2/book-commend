@@ -96,6 +96,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    background-color: #fff;
+    padding-bottom: 10px;
     .book-item {
       width: 30%;      
     }
@@ -122,7 +124,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     top: 300px;
-    right: 34px;
+    left: 20px;
     width: 72px;
     z-index: 9999;
     .item {

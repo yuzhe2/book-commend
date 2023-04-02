@@ -49,6 +49,7 @@ export default {
     handleClickRegister () {
       userRegister((this.form)).then((res) => {
         this.$message.success('注册成功')
+        this.$router.push('/login')
       }) 
     }
   }
