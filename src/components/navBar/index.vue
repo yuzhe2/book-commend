@@ -49,6 +49,9 @@ export default {
       this.$router.push('/me')
     },
     handleSearchName () {
+      if (!this.searchName) {
+        return this.$message.warning('输入不能为空')
+      }
       this.$router.push(`/search?name=${this.searchName}`)
     },
     handleJumpSort () {
@@ -86,7 +89,7 @@ export default {
   justify-content: space-between;
   padding: 20px 100px;
   background-color: #fff;
-  z-index: 9999;
+  z-index: 99;
   box-sizing: border-box;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }

@@ -39,6 +39,7 @@ export default {
   padding: 0px 16px;
   .search-list {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     .book-item {
       width: 30%;
