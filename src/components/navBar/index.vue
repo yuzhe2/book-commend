@@ -1,6 +1,6 @@
 <template>
   <div class="nav">
-    <span>个性化图书推荐网</span>
+    <a @click="jumpHome" class="home">个性化图书推荐网</a>
     <el-input
       placeholder="搜索图书名"
       v-model="searchName"
@@ -8,19 +8,18 @@
     >
       <el-button slot="append" @click="handleSearchName">搜索</el-button>
     </el-input>
-    <el-button @click="handleJumpSort">图书分类</el-button>
-    <el-button @click="handleJumpEnd">后台登录</el-button>
+    <a @click="handleJumpEnd" class="blue">后台登录</a>
     <div class="is-login">
       <template v-if="isLogin">
         <span>
-          <el-button @click="jumpPerson">个人中心</el-button>
-          <el-button @click="outerLogin">退出登录</el-button>
+          <a @click="jumpPerson" class="person blue">个人中心</a>
+          <a @click="outerLogin" class="blue">退出登录</a>
         </span>
       </template>
       <template v-else>
         <span>
           欢迎, 请先
-          <el-button class="login" @click="jumpLoginPage">登录</el-button>
+          <a class="login blue" @click="jumpLoginPage">登录</a>
         </span>
       </template>
     </div>
@@ -43,6 +42,9 @@ export default {
     })
   },
   methods: {
+    jumpHome () {
+      this.$router.push('/home')
+    },
     jumpPerson () {
       this.$router.push('/me')
     },
@@ -77,9 +79,28 @@ export default {
 <style lang="scss" scoped>
 .nav {
   display: flex;
+  position: fixed;
+  top: 0px;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   padding: 20px 100px;
+  background-color: #fff;
+  z-index: 9999;
+  box-sizing: border-box;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+}
+
+a {
+  cursor: pointer;
+}
+
+.blue {
+  color: #409EFF;
+}
+
+.person {
+  margin-right: 20px;
 }
 
 .input-with-select {

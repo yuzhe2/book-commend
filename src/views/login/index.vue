@@ -7,7 +7,11 @@
           <el-input v-model="form.userName" class="username"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="form.password" class="password"></el-input>
+          <el-input v-model="form.password" class="password" show-password></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-radio v-model="type" label="0">学生</el-radio>
+          <el-radio v-model="type" label="1">教师</el-radio>
         </el-form-item>
         <el-form-item class="btns">
           <el-button type="primary" @click="handleClickLogin" class="jump">登录</el-button>
@@ -29,11 +33,15 @@ export default {
         userName: "",
         password: "",
       },
+      type: '0'
     };
   },
   methods: {
     handleClickLogin () {
-      userLogin(this.form).then(({ data }) => {
+      userLogin({
+        ...this.form,
+        type: this.type
+      }).then(({ data }) => {
         let userInfo = data.data
         localStorage.setItem('frontToken', userInfo.token)
         localStorage.setItem('userId', userInfo.user.id)
@@ -54,7 +62,7 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   padding-top: 130px;
-  height: calc(100vh - 124px);
+  height: calc(100vh - 82px);
   box-sizing: border-box;
 }
 
@@ -79,6 +87,10 @@ export default {
 
   .btns {
     text-align: center;
+
+    ::v-deep .el-form-item__content {
+      margin-left: 0px !important;
+    }
     .register,
     .jump {
       border-radius: 0px;

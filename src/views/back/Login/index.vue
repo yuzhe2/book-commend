@@ -7,11 +7,16 @@
         <el-input v-model="ruleForm.username" class="username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="ruleForm.password" class="password"></el-input>
+        <el-input v-model="ruleForm.password" class="password" show-password></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-radio v-model="type" label="1">教师</el-radio>
+        <el-radio v-model="type" label="2">管理员</el-radio>
       </el-form-item>
       <el-form-item style="text-align: center;">
-        <el-button @click="handleClickLogin">登录</el-button>
+        <el-button @click="handleClickLogin" type="primary" class="btn">登录</el-button>
       </el-form-item>
+
     </el-form>
     <div class="bg"></div>
   </div>
@@ -28,6 +33,7 @@ export default {
         password: "",
         username: "",
       },
+      type: '1'
     };
   },
   methods: {
@@ -35,6 +41,7 @@ export default {
       backLogin({
         userName: this.ruleForm.username,
         password: this.ruleForm.password,
+        type: this.type
       }).then(({ data }) => {
         let token = data.data.token;
         if (data.data.type === "1") {
@@ -68,6 +75,11 @@ export default {
       border-radius: 0px;
     }
   }
+}
+
+.btn {
+  width: 100%;
+  border-radius: 0px;
 }
 
 .bg {

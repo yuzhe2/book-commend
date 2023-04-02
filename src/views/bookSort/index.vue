@@ -39,7 +39,6 @@ export default {
     getTypeList (id) {
       getBookListByType({ typeId: id }).then(({ data }) => {
         this.bookList = data.data
-        this.$message.success('查询成功')
       })
     }
   },

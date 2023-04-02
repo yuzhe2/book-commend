@@ -63,7 +63,7 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   padding-top: 60px;
-  height: calc(100vh - 124px);
+  height: calc(100vh - 82px);
   box-sizing: border-box;
 }
 .no-radius {
