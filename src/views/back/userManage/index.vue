@@ -26,10 +26,8 @@
         </el-form-item>
         <el-form-item>
           <div class="control-btn">
-            <el-select v-model="manType" @change="handleManChange">
-              <el-option value="1" label="查询"></el-option>
-              <el-option value="2" label="添加"></el-option>
-            </el-select>
+            <el-button type="primary" @click="handleSearch">查询</el-button>
+            <el-button type="primary" @click="openDialog">添加</el-button>
           </div>
         </el-form-item>
       </el-form>

@@ -89,6 +89,7 @@ export default {
 .container {
   height: calc(100vh - 44px);
   .aside {
+    width: 200px !important;
     border-right: solid 1px #e6e6e6;
   }
   .main {

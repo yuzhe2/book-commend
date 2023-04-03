@@ -44,7 +44,21 @@
           <el-table :data="bookList" stripe style="width: 100%">
             <el-table-column prop="bookName" label="书籍名称" width="180">
             </el-table-column>
+            <el-table-column prop="author" label="作者" width="180">
+            </el-table-column>
+            <el-table-column prop="score" label="评分" width="180">
+            </el-table-column>
             <el-table-column prop="createTime" label="借阅时间" width="180">
+            </el-table-column>
+            <el-table-column label="操作" width="180">
+              <template slot-scope="scope">
+                <el-button
+                  @click="borrowRight(scope.row)"
+                  type="text"
+                  size="small">
+                  归还
+                </el-button>
+              </template>
             </el-table-column>
           </el-table>
         </template>
@@ -54,7 +68,7 @@
 </template>
 
 <script>
-import { updateUser, pageBorrow } from "@/api/top/user";
+import { updateUser, pageBorrow, returnBook } from "@/api/top/user";
 
 import bookItem from "@/components/book/index.vue";
 
@@ -73,6 +87,17 @@ export default {
     };
   },
   methods: {
+    // 归还
+    borrowRight (row) {
+      let id = row.id
+      returnBook({ id }).then(() => {
+        this.$message.success('归还成功')
+        pageBorrow().then((res) => {
+          this.bookList = res.data.data.borrowList;
+          this.form = res.data.data.user;
+        });
+      })
+    },
     handleSelect (val) {
       this.person = val === 'person'
     },
@@ -98,12 +123,18 @@ export default {
 .person-aside {
   .el-menu {
     height: 100%;
+    background-color: #ecf5ff;
+
+    ::v-deep .is-active {
+      background-color: #fff;
+    }
   }
 }
 .person-center {
   display: flex;
   justify-content: center;
   height: calc(100vh - 80px);
+  background-color: #ecf5ff;
   .person-info {
     border: 1px solid #ccc;
     padding: 10px 20px;

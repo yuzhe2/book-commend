@@ -11,6 +11,13 @@
         <el-form-item label="图书名">
           <el-input v-model="formInline.bookName" placeholder="请输入图书名"></el-input>
         </el-form-item>
+        <el-form-item label="审核状态">
+          <el-select v-model="formInline.status" placeholder="请输入审核状态" clearable>
+            <el-option label="待归还" value="0"></el-option>
+            <el-option label="待审核" value="1"></el-option>
+            <el-option label="已归还" value="2"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSearch">查询</el-button>
         </el-form-item>
@@ -18,13 +25,18 @@
     </div>
     <div class="table">
       <el-table :data="sortData">
-        <el-table-column
-          v-for="(item, index) in sortList"
-          :key="index"
-          :prop="item.fieldName"
-          :label="item.label"
-        >
-        </el-table-column>
+        <template v-for="(item, index) in sortList">
+          <el-table-column
+            :prop="item.fieldName"
+            :label="item.label"
+            v-if="item.fieldName === 'status'"
+          >
+            <template slot-scope="scope">
+              <el-tag :type="getColor(scope.row.status)">{{ statusDict(scope.row.status) }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column v-else :prop="item.fieldName" :label="item.label"></el-table-column>
+        </template>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="handleReturnBook(scope.row)">归还</el-button>
@@ -58,7 +70,8 @@ export default {
       formInline: {
         userName: '',
         year: '',
-        bookName: ''
+        bookName: '',
+        status: ''
       },
       sortList: [
         {
@@ -70,6 +83,10 @@ export default {
           fieldName: "bookName",
         },
         {
+          label: '审核状态',
+          fieldName: 'status'
+        },
+        {
           label: '创建时间',
           fieldName: 'createTime'
         }
@@ -77,12 +94,29 @@ export default {
     };
   },
   methods: {
+    // 
+    getColor (id) {
+      if (id == 1) {
+        return ''
+      } else if (id == 0) {
+        return 'danger'
+      } else {
+        return 'success'
+      }
+    },
+    statusDict (id) {
+      if (id == 1) {
+        return '待审核'
+      } else if (id == 0) {
+        return '待归还'
+      } else {
+        return '已归还'
+      }
+    },
     // 归还图书
     handleReturnBook (row) {
-      console.log(row)
       returnBook({
-        bookId: row.bookid,
-        userId: row.userid
+        id: row.id
       }).then(() => {
         this.$message({
           type: 'success',

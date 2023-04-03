@@ -11,3 +11,6 @@ export const updateUser = (data) => instance.post(`/user/updateUser`, data)
 
 // 查询用户当前借阅记录
 export const pageBorrow = () => instance.get(`/user/pageBorrow`)
+
+// 归还图书
+export const returnBook = (data) => instance.post(`/user/returnBook`, data)
