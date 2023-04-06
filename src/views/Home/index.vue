@@ -27,7 +27,7 @@
     <hot-commend id="hot-commend"></hot-commend>
     <new-commend id="new-commend"></new-commend>
     <div class="man-btn">
-      <a href="#per-commend" class="item">人性化</a>
+      <a href="#per-commend" class="item">个性化</a>
       <a href="#hot-commend" class="item">热门图书</a>
       <a href="#new-commend" class="item">新书上架</a>
     </div>

@@ -26,7 +26,7 @@
 
 <script>
 import bookItem from '@/components/book/index.vue'
-import { getPersonalBookList } from '@/api/top/book'
+import { getPersonalBookList, getHotBookList } from '@/api/top/book'
 
 const pageSize = 12
 
@@ -52,10 +52,24 @@ export default {
         pageNum: this.curPage,
         pageSize
       }
-      getPersonalBookList(params).then(({ data }) => {
-        this.bookList = data.data.rows
-        this.bookTotal = parseInt(data.data.total)
-      })
+      if (localStorage.getItem('frontToken')) {
+        getPersonalBookList(params).then(({ data }) => {
+          if (data.code == '505') {
+            this.$message.warning('登录过期, 请重新登录')
+            this.$store.commit('changeLoginStatus', false)
+            localStorage.removeItem('frontToken')
+            localStorage.removeItem('userId')
+          } else {
+            this.bookList = data.data.rows
+            this.bookTotal = parseInt(data.data.total)
+          }
+        })
+      } else {
+        getHotBookList(params).then(({ data }) => {
+          this.bookList = data.data.rows
+          this.bookTotal = parseInt(data.data.total)
+        })
+      }
     }
   },
   created () {
